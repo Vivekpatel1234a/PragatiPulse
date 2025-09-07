@@ -6,13 +6,11 @@
   <title>Report Civic Issue</title>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Add EmailJS SDK in head -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script>
-  emailjs.init("dpVgK5PVSKB1uV2cW"); // Your Public Key
-</script>
-
-
+  <!-- Add EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    emailjs.init("dpVgK5PVSKB1uV2cW"); // Your Public Key
+  </script>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
 
@@ -156,7 +154,9 @@
       try {
         stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: useFrontCamera ? 'user' : 'environment' }, audio: false });
         video.srcObject = stream;
-      } catch (err) {}
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     switchBtn.addEventListener('click', () => {
@@ -223,54 +223,64 @@
       stopBtn.classList.add("hidden");
     });
 
-   submitBtn.addEventListener('click', () => {
-  if (!photoTaken) return;
+    submitBtn.addEventListener('click', () => {
+      if (!photoTaken) {
+        confirmationCard.textContent = "⚠️ Please capture an image before submitting.";
+        confirmationCard.classList.remove('hidden');
+        return;
+      }
 
-  const comment = document.getElementById("comment").value.trim();
-  if (!comment) {
-    confirmationCard.textContent = "⚠️ Please describe your problem before submitting.";
-    confirmationCard.classList.remove("hidden");
-    return;
-  }
+      const comment = document.getElementById("comment").value.trim();
+      if (!comment) {
+        confirmationCard.textContent = "⚠️ Please describe your problem before submitting.";
+        confirmationCard.classList.remove("hidden");
+        return;
+      }
 
-  // Report data (keys must match template variables in EmailJS)
-  const reportData = {
-    type: problemTypeSelect.value,
-    comment: comment,
-    location: locationText.textContent || "Not Available",
-    time: new Date().toLocaleString()
-  };
+      const reportData = {
+        type: problemTypeSelect.value,
+        comment: comment,
+        location: locationText.textContent || "Not Available",
+        time: new Date().toLocaleString()
+      };
 
-  // Store in localStorage
-  let reports = JSON.parse(localStorage.getItem('reports')) || [];
-  reports.push(reportData);
-  localStorage.setItem('reports', JSON.stringify(reports));
+      let reports = JSON.parse(localStorage.getItem('reports')) || [];
+      reports.push(reportData);
+      localStorage.setItem('reports', JSON.stringify(reports));
 
-  // Send Email
- emailjs.send("service_a4y82kl", "template_ujq8rfd", reportData, "dpVgK5PVSKB1uV2cW")
+      // Send Email
+      emailjs.send("service_a4y82kl", "template_ujq8rfd", reportData, "dpVgK5PVSKB1uV2cW")
+        .then((response) => console.log("Email sent!", response))
+        .catch((error) => console.error("Email failed", error));
 
-    .then((response) => {
-      console.log("SUCCESS!", response.status, response.text);
-      confirmationCard.textContent =confirmationCard.textContent = "✅ Report submitted! Your photo and details are under system verification. You will be notified once the review is complete.";
+      // Optional: Upload image but do not overwrite confirmation message
+      canvas.toBlob((blob) => {
+        const formData = new FormData();
+        formData.append('file', blob);
+        formData.append('upload_preset', 'report-upload'); // Replace with your preset
 
-      confirmationCard.classList.remove('hidden');
-    })
-    .catch((error) => {
-      console.error("FAILED...", error);
-      confirmationCard.textContent = "❌ Failed to send email. Please try again.";
+        fetch('https://api.cloudinary.com/v1_1/dvgh1kmws/image/upload', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => console.log('Image uploaded:', data.secure_url))
+        .catch(err => console.error('Upload failed:', err));
+      }, 'image/jpeg');
+
+      // Hide form sections
+      cameraSection.classList.add('hidden');
+      commentAudioSection.classList.add('hidden');
+      submitSection.classList.add('hidden');
+      locationSection.classList.add('hidden');
+      video.classList.add('hidden');
+      canvas.classList.add('hidden');
+      reportSubmitted = true;
+
+      // Show final message
+      confirmationCard.textContent = "✅ Report submitted! Your photo and details are under system verification. You will be notified once the review is complete.";
       confirmationCard.classList.remove('hidden');
     });
-
-  // Hide form after submit
-  cameraSection.classList.add('hidden');
-  commentAudioSection.classList.add('hidden');
-  submitSection.classList.add('hidden');
-  locationSection.classList.add('hidden');
-  reportSubmitted = true;
-});
-
-
-
 
     function resetForm() {
       photoTaken = false;
@@ -285,43 +295,6 @@
       canvas.classList.add('hidden');
       video.classList.remove('hidden');
     }
-    
-document.getElementById('submitBtn').addEventListener('click', () => {
-  const canvas = document.getElementById('canvas');
-  const confirmationCard = document.getElementById('confirmationCard');
-
-  if (canvas.classList.contains('hidden')) {
-    confirmationCard.innerHTML = `<p class="text-red-600">Please capture an image before submitting.</p>`;
-    confirmationCard.classList.remove('hidden');
-    return;
-  }
-
-  canvas.toBlob((blob) => {
-    const formData = new FormData();
-    formData.append('file', blob);
-    formData.append('upload_preset', 'report-upload'); // 🔁 Replace with your preset name
-
-    fetch('https://api.cloudinary.com/v1_1/dvgh1kmws/image/upload', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log('Image uploaded:', data.secure_url);
-      confirmationCard.innerHTML = `
-        <p class="font-semibold text-green-700">Report submitted successfully!</p>
-        <img src="${data.secure_url}" class="mx-auto mt-2 rounded shadow-md" width="200">
-      `;
-      confirmationCard.classList.remove('hidden');
-    })
-    .catch(err => {
-      console.error('Upload failed:', err);
-      confirmationCard.innerHTML = `<p class="text-red-600">Upload failed. Try again.</p>`;
-      confirmationCard.classList.remove('hidden');
-    });
-  }, 'image/jpeg');
-});
-
   </script>
 
 </body>
