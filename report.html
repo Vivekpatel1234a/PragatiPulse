@@ -51,11 +51,13 @@
 
         <!-- Step 2: Camera -->
         <div id="cameraSection" class="hidden text-center mb-4">
-          <video id="camera" autoplay playsinline class="mx-auto rounded-lg shadow-md mb-2 w-80 h-60"></video>
-          <canvas id="canvas" class="hidden w-80 h-60 mx-auto rounded-lg shadow-md mb-2"></canvas>
+          <!-- Start Camera Button for Mobile -->
+          <button id="startCameraBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg mb-2">Start Camera</button>
+          <video id="camera" autoplay playsinline class="mx-auto rounded-lg shadow-md mb-2 w-full max-w-md h-auto"></video>
+          <canvas id="canvas" class="hidden mx-auto rounded-lg shadow-md mb-2 w-full max-w-md h-auto"></canvas>
           <div class="flex justify-center gap-2 mb-2">
             <button id="switchCameraBtn" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Switch Camera</button>
-            <button id="captureBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg">
+            <button id="captureBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-lg" disabled>
               <i class="fas fa-camera mr-2"></i>Capture
             </button>
           </div>
@@ -123,6 +125,7 @@
     const canvas = document.getElementById('canvas');
     const captureBtn = document.getElementById('captureBtn');
     const switchBtn = document.getElementById('switchCameraBtn');
+    const startCameraBtn = document.getElementById('startCameraBtn');
 
     const recordBtn = document.getElementById("recordBtn");
     const stopBtn = document.getElementById("stopBtn");
@@ -136,7 +139,8 @@
     let reportSubmitted = false;
     let currentCoords = null;
 
-    problemTypeSelect.addEventListener('change', async () => {
+    // When Problem Type Selected
+    problemTypeSelect.addEventListener('change', () => {
       if (reportSubmitted) {
         confirmationCard.textContent = "⚠️ You have already submitted a report. Please wait before submitting again.";
         confirmationCard.classList.remove("hidden");
@@ -145,8 +149,14 @@
       resetForm();
       if (problemTypeSelect.value) {
         cameraSection.classList.remove('hidden');
-        await startCamera();
       }
+    });
+
+    // Start Camera (Mobile-friendly)
+    startCameraBtn.addEventListener('click', async () => {
+      startCameraBtn.disabled = true;
+      await startCamera();
+      captureBtn.disabled = false;
     });
 
     async function startCamera() {
@@ -155,15 +165,19 @@
         stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: useFrontCamera ? 'user' : 'environment' }, audio: false });
         video.srcObject = stream;
       } catch (err) {
-        console.error(err);
+        console.error("Camera Error:", err);
+        alert("Camera access required!");
+        startCameraBtn.disabled = false;
       }
     }
 
+    // Switch Camera
     switchBtn.addEventListener('click', () => {
       useFrontCamera = !useFrontCamera;
       startCamera();
     });
 
+    // Capture Photo
     captureBtn.addEventListener('click', () => {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
@@ -172,7 +186,6 @@
       video.classList.add('hidden');
 
       if (stream) stream.getTracks().forEach(track => track.stop());
-
       photoTaken = true;
 
       // Show location, comment/audio, and submit
@@ -202,6 +215,7 @@
       }
     });
 
+    // Audio Recording
     recordBtn.addEventListener("click", async () => {
       const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder = new MediaRecorder(audioStream);
@@ -223,6 +237,7 @@
       stopBtn.classList.add("hidden");
     });
 
+    // Submit Report
     submitBtn.addEventListener('click', () => {
       if (!photoTaken) {
         confirmationCard.textContent = "⚠️ Please capture an image before submitting.";
@@ -253,7 +268,7 @@
         .then((response) => console.log("Email sent!", response))
         .catch((error) => console.error("Email failed", error));
 
-      // Optional: Upload image but do not overwrite confirmation message
+      // Upload Image
       canvas.toBlob((blob) => {
         const formData = new FormData();
         formData.append('file', blob);
@@ -268,7 +283,7 @@
         .catch(err => console.error('Upload failed:', err));
       }, 'image/jpeg');
 
-      // Hide form sections
+      // Hide sections
       cameraSection.classList.add('hidden');
       commentAudioSection.classList.add('hidden');
       submitSection.classList.add('hidden');
@@ -277,11 +292,11 @@
       canvas.classList.add('hidden');
       reportSubmitted = true;
 
-      // Show final message
       confirmationCard.textContent = "✅ Report submitted! Your photo and details are under system verification. You will be notified once the review is complete.";
       confirmationCard.classList.remove('hidden');
     });
 
+    // Reset Form
     function resetForm() {
       photoTaken = false;
       if (stream) stream.getTracks().forEach(track => track.stop());
@@ -294,6 +309,7 @@
       document.getElementById("comment").value = "";
       canvas.classList.add('hidden');
       video.classList.remove('hidden');
+      startCameraBtn.disabled = false;
     }
   </script>
 
