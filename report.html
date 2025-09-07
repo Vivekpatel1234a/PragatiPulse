@@ -262,6 +262,43 @@
       canvas.classList.add('hidden');
       video.classList.remove('hidden');
     }
+    
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const canvas = document.getElementById('canvas');
+  const confirmationCard = document.getElementById('confirmationCard');
+
+  if (canvas.classList.contains('hidden')) {
+    confirmationCard.innerHTML = `<p class="text-red-600">Please capture an image before submitting.</p>`;
+    confirmationCard.classList.remove('hidden');
+    return;
+  }
+
+  canvas.toBlob((blob) => {
+    const formData = new FormData();
+    formData.append('file', blob);
+    formData.append('upload_preset', 'report-upload'); // 🔁 Replace with your preset name
+
+    fetch('https://api.cloudinary.com/v1_1/dvgh1kmws/image/upload', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log('Image uploaded:', data.secure_url);
+      confirmationCard.innerHTML = `
+        <p class="font-semibold text-green-700">Report submitted successfully!</p>
+        <img src="${data.secure_url}" class="mx-auto mt-2 rounded shadow-md" width="200">
+      `;
+      confirmationCard.classList.remove('hidden');
+    })
+    .catch(err => {
+      console.error('Upload failed:', err);
+      confirmationCard.innerHTML = `<p class="text-red-600">Upload failed. Try again.</p>`;
+      confirmationCard.classList.remove('hidden');
+    });
+  }, 'image/jpeg');
+});
+
   </script>
 
 </body>
