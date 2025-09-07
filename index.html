@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivicSense Complaint Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .language-content {
+      display: none;
+    }
+    .language-content.active {
+      display: block;
+    }
+    
+    .marquee {
+      animation: marquee 30s linear infinite;
+    }
+    
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes pulse-glow {
+      from { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+      to { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+    }
+    
+    .counter {
+      font-variant-numeric: tabular-nums;
+    }
+    
+    .parallax-bg {
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    
+    .card-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+    
+    .card-3d:hover {
+      transform: rotateY(5deg) rotateX(5deg);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(45deg, #3B82F6, #8B5CF6, #06B6D4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .hover-bg-card {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+
+  .hover-bg-card::before,
+  .hover-bg-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 0;
+    transition: all 0.5s ease;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .hover-bg-card::before {
+    left: -50%;
+  }
+
+  .hover-bg-card::after {
+    right: -50%;
+  }
+
+  .hover-bg-card:hover::before {
+    left: 0;
+  }
+
+  .hover-bg-card:hover::after {
+    right: 0;
+  }
+
+  .hover-bg-card .card-content {
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Specific background images for each card */
+ 
+  </style>
+</head>
+<body class="bg-gray-50">
+  
+  <!-- Two-Row Navbar -->
+  <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-xl">
+    <!-- First Row: Logo, Govt Logo, Language -->
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Left: Main Logo -->
+        <div class="flex items-center space-x-4">
+          <img src="pp2c.png" alt="CivicSense Logo" class="h-14 w-auto floating">
+          <span class="text-2xl font-bold text-white">PragatiPulse</span>
+    </div>
+
+        <!-- Center: Government Logo -->
+        <div class="flex items-center space-x-3">
+          <i class="fas fa-landmark text-3xl pulse-glow"></i>
+          <span class="text-xl font-semibold">Government Portal</span>
+        </div>
+
+    <!-- Right: Language Selector -->
+    <div>
+          <select id="languageSelector" class="border rounded-lg px-4 py-2 text-black bg-white shadow-lg hover:shadow-xl transition-all duration-300">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी</option>
+            <option value="ta">தமிழ்</option>
+            <option value="te">తెలుగు</option>
+      </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Second Row: Navigation Menu -->
+    <div class="bg-gradient-to-r from-blue-700 to-blue-900 border-t border-blue-400">
+      <div class="max-w-7xl mx-auto px-6 py-4">
+        <nav class="flex items-center justify-center space-x-12">
+         <nav class="flex items-center justify-center space-x-12">
+  <a href="index.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">
+    <i class="fas fa-home mr-2"></i> Home
+  </a>
+  <a href="officer-login.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">
+    <i class="fas fa-user-tie mr-2"></i> Officer Login
+  </a>
+  <a href="contributors.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">
+    <i class="fas fa-trophy mr-2"></i> Top Contributors
+  </a>
+  <a href="about.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">
+    <i class="fas fa-info-circle mr-2"></i> About Us
+  </a>
+        </nav>
+      </div>
+  </div>
+</header>
+
+  <!-- Right-to-Left Scrolling Motivational Text -->
+  <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white py-3 overflow-hidden">
+    <div class="marquee whitespace-nowrap text-lg font-semibold">
+      <span class="lang-en">🌟 Be the change you want to see! Report civic issues, track progress, and build a better India together! 🇮🇳</span>
+      <span class="lang-hi language-content">🌟 वो बदलाव बनें जो आप देखना चाहते हैं! नागरिक समस्याओं की रिपोर्ट करें, प्रगति देखें और एक बेहतर भारत बनाएं! 🇮🇳</span>
+      <span class="lang-ta language-content">🌟 நீங்கள் பார்க்க விரும்பும் மாற்றமாக இருங்கள்! குடிமைப் பிரச்சினைகளை அறிக்கையிடுங்கள், முன்னேற்றத்தை கண்காணிக்கவும், சேர்ந்து சிறந்த இந்தியாவை உருவாக்குங்கள்! 🇮🇳</span>
+      <span class="lang-te language-content">🌟 మీరు చూడాలనుకునే మార్పుగా ఉండండి! పౌర సమస్యలను నివేదించండి, పురోగతిని ట్రాక్ చేయండి, కలిసి మెరుగైన భారతదేశాన్ని నిర్మించండి! 🇮🇳</span>
+    </div>
+  </div>
+<!-- Full Background Wrapper -->
+<section class="relative overflow-hidden">
+  <!-- One Shared Background -->
+  <div class="absolute inset-0 parallax-bg" 
+       style="background-image: url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'); background-size: cover; background-position: center;">
+  </div>
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-indigo-900/80"></div>
+  
+  <!-- HERO CONTENT -->
+  <div class="relative py-20 max-w-7xl mx-auto px-6 text-center text-white">
+    <h1 class="text-5xl md:text-7xl font-bold mb-8 animate-fade-in">
+      <span class="lang-en">Building Better Communities</span>
+      <span class="lang-hi language-content">बेहतर समुदाय बनाना</span>
+      <span class="lang-ta language-content">சிறந்த சமூகங்களை உருவாக்குதல்</span>
+      <span class="lang-te language-content">మెరుగైన సమాజాలను నిర్మించడం</span>
+    </h1>
+    <p class="text-xl text-blue-100 mt-8 max-w-4xl mx-auto leading-relaxed">
+      <span class="lang-en">Join thousands of citizens in making our cities cleaner, safer, and more efficient. Your voice matters, and together we can create positive change in our communities.</span>
+      <span class="lang-hi language-content">हमारे शहरों को साफ, सुरक्षित और अधिक कुशल बनाने में हजारों नागरिकों के साथ जुड़ें। आपकी आवाज मायने रखती है, और साथ मिलकर हम अपने समुदायों में सकारात्मक बदलाव ला सकते हैं।</span>
+      <span class="lang-ta language-content">எங்கள் நகரங்களை சுத்தமாக, பாதுகாப்பாக மற்றும் திறமையாக மாற்றுவதில் ஆயிரக்கணக்கான குடிமக்களுடன் சேர்ந்து கொள்ளுங்கள். உங்கள் குரல் முக்கியமானது, ஒன்றாக நாங்கள் எங்கள் சமூகங்களில் நேர்மறையான மாற்றத்தை உருவாக்கலாம்.</span>
+      <span class="lang-te language-content">మా నగరాలను శుభ్రంగా, సురక్షితంగా మరియు మరింత సమర్థవంతంగా చేయడంలో వేలాది పౌరులతో చేరండి. మీ వాయిస్ ముఖ్యమైనది, కలిసి మేము మా సమాజాలలో సానుకూల మార్పును తీసుకురాగలము.</span>
+    </p>
+  </div>
+
+  <!-- ACTION CARDS -->
+  <div class="relative py-12 max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Report Issue Card -->
+      <div class="bg-blue-50/95 backdrop-blur-sm p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-blue-200/50">
+  <div class="text-center">
+    <div class="w-16 h-16 mx-auto bg-blue-500 rounded-lg flex items-center justify-center mb-6">
+      <i class="fas fa-clipboard-list text-2xl text-white"></i>
+    </div>
+    <h2 class="text-2xl font-bold text-blue-800 mb-4">
+      <span class="lang-en">Report Issue</span>
+      <span class="lang-hi language-content">समस्या रिपोर्ट करें</span>
+      <span class="lang-ta language-content">பிரச்சினையை அறிக்கையிடுங்கள்</span>
+      <span class="lang-te language-content">సమస్యను నివేదించండి</span>
+    </h2>
+    <p class="text-blue-700 mb-6 text-sm">
+      <span class="lang-en">Submit your civic complaints with photos and get instant tracking</span>
+      <span class="lang-hi language-content">फोटो के साथ अपनी नागरिक शिकायतें जमा करें और तुरंत ट्रैकिंग प्राप्त करें</span>
+      <span class="lang-ta language-content">புகைப்படங்களுடன் உங்கள் குடிமைப் புகார்களை சமர்ப்பித்து உடனடி கண்காணிப்பைப் பெறுங்கள்</span>
+      <span class="lang-te language-content">ఫోటోలతో మీ పౌర ఫిర్యాదులను సమర్పించండి మరియు తక్షణ ట్రాకింగ్ పొందండి</span>
+    </p>
+    <a href="report.html">
+      <button class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
+        <i class="fas fa-paper-plane mr-2"></i>
+        <span class="lang-en">Report Now</span>
+        <span class="lang-hi language-content">अभी रिपोर्ट करें</span>
+        <span class="lang-ta language-content">இப்போது அறிக்கையிடுங்கள்</span>
+        <span class="lang-te language-content">ఇప్పుడు నివేదించండి</span>
+      </button>
+    </a>
+  </div>
+</div>
+
+
+      <!-- Track Issue Card -->
+      <div class="bg-green-50/95 backdrop-blur-sm p-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-green-200/50">
+  <div class="text-center">
+    <!-- Icon -->
+    <div class="w-16 h-16 mx-auto bg-green-500 rounded-lg flex items-center justify-center mb-6">
+      <i class="fas fa-search-location text-2xl text-white"></i>
+    </div>
+
+    <!-- Title -->
+    <h2 class="text-2xl font-bold text-green-800 mb-4">
+      <span class="lang-en">Track Issue</span>
+      <span class="lang-hi language-content">समस्या ट्रैक करें</span>
+      <span class="lang-ta language-content">பிரச்சினையை கண்காணி</span>
+      <span class="lang-te language-content">సమస్యను ట్రాక్ చేయండి</span>
+    </h2>
+
+    <!-- Description -->
+    <p class="text-green-700 mb-6 text-sm">
+      <span class="lang-en">Monitor the progress of your submitted complaints in real-time</span>
+      <span class="lang-hi language-content">अपनी जमा की गई शिकायतों की प्रगति को रियल-टाइम में मॉनिटर करें</span>
+      <span class="lang-ta language-content">உங்கள் சமர்ப்பிக்கப்பட்ட புகார்களின் முன்னேற்றத்தை நேரடியாக கண்காணிக்கவும்</span>
+      <span class="lang-te language-content">మీ సమర్పించిన ఫిర్యాదుల పురోగతిని రియల్-టైమ్‌లో మానిటర్ చేయండి</span>
+    </p>
+
+    <!-- Button -->
+    <a href="track.html">
+      <button class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200">
+        <i class="fas fa-chart-line mr-2"></i>
+        <span class="lang-en">Track Now</span>
+        <span class="lang-hi language-content">अभी ट्रैक करें</span>
+        <span class="lang-ta language-content">இப்போது கண்காணி</span>
+        <span class="lang-te language-content">ఇప్పుడు ట్రాక్ చేయండి</span>
+      </button>
+    </a>
+  </div>
+</div>
+
+
+    </div>
+  </div>
+</section> 
+  <!-- Static Background Section - Overall Status to Platform Features -->
+  <div class="relative">
+    <!-- Static Background -->
+    <div class="fixed inset-0 bg-gradient-to-br from-gray-100 to-blue-50 opacity-90" style="z-index: -1; background-image: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&auto=format&fit=crop&w=2071&q=80'); background-size: cover; background-position: center; background-attachment: fixed;"></div>
+    
+    <!-- Overall Status Dashboard with Enhanced Realistic Design -->
+    <section class="relative py-20 overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-indigo-900/90"></div>
+    
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0">
+      <div class="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-pulse"></div>
+      <div class="absolute top-32 right-20 w-16 h-16 bg-yellow-400/20 rounded-full animate-bounce"></div>
+      <div class="absolute bottom-20 left-1/4 w-12 h-12 bg-green-400/20 rounded-full animate-ping"></div>
+      <div class="absolute bottom-32 right-1/3 w-24 h-24 bg-red-400/10 rounded-full animate-pulse"></div>
+    </div>
+    
+    <div class="relative max-w-6xl mx-auto px-6 text-center text-white">
+      <div class="mb-8">
+        <div class="inline-block p-4 bg-white/10 backdrop-blur-sm rounded-full mb-6">
+          <i class="fas fa-chart-pie text-4xl text-yellow-300 hover:rotate-3-times transition-all duration-300"></i>
+        </div>
+        <h2 class="text-5xl font-bold mb-6 gradient-text">
+          <span class="lang-en">Overall Status Dashboard</span>
+          <span class="lang-hi language-content">समग्र स्थिति डैशबोर्ड</span>
+          <span class="lang-ta language-content">மொத்த நிலை டாஷ்போர்டு</span>
+          <span class="lang-te language-content">మొత్తం స్థితి డాష్‌బోర్డ్</span>
+        </h2>
+        <p class="text-xl text-blue-100 mb-8 max-w-4xl mx-auto leading-relaxed">
+          <span class="lang-en">Get comprehensive insights into complaint resolution across all districts and departments. Track progress, identify trends, and ensure accountability.</span>
+          <span class="lang-hi language-content">सभी जिलों और विभागों में शिकायत समाधान की व्यापक जानकारी प्राप्त करें। प्रगति को ट्रैक करें, रुझानों की पहचान करें और जवाबदेही सुनिश्चित करें।</span>
+          <span class="lang-ta language-content">அனைத்து மாவட்டங்கள் மற்றும் துறைகளிலும் புகார் தீர்வு குறித்த விரிவான நுண்ணறிவுகளைப் பெறுங்கள். முன்னேற்றத்தை கண்காணிக்கவும், போக்குகளை அடையாளம் காணவும் மற்றும் பொறுப்புணர்வை உறுதிப்படுத்தவும்.</span>
+          <span class="lang-te language-content">అన్ని జిల్లాలు మరియు శాఖలలో ఫిర్యాదు పరిష్కారం గురించి సమగ్ర అంతర్దృష్టులను పొందండి. పురోగతిని ట్రాక్ చేయండి, పోకడలను గుర్తించండి మరియు జవాబుదారీతనాన్ని నిర్ధారించండి.</span>
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
+          <i class="fas fa-map-marker-alt text-3xl text-yellow-300 mb-3"></i>
+          <h3 class="text-lg font-semibold mb-2">
+            <span class="lang-en">28 States</span>
+            <span class="lang-hi language-content">28 राज्य</span>
+            <span class="lang-ta language-content">28 மாநிலங்கள்</span>
+            <span class="lang-te language-content">28 రాష్ట్రాలు</span>
+          </h3>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
+          <i class="fas fa-building text-3xl text-green-300 mb-3"></i>
+          <h3 class="text-lg font-semibold mb-2">
+            <span class="lang-en">500+ Cities</span>
+            <span class="lang-hi language-content">500+ शहर</span>
+            <span class="lang-ta language-content">500+ நகரங்கள்</span>
+            <span class="lang-te language-content">500+ నగరాలు</span>
+          </h3>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
+          <i class="fas fa-users text-3xl text-blue-300 mb-3"></i>
+          <h3 class="text-lg font-semibold mb-2">
+            <span class="lang-en">1M+ Citizens</span>
+            <span class="lang-hi language-content">1M+ नागरिक</span>
+            <span class="lang-ta language-content">1M+ குடிமக்கள்</span>
+            <span class="lang-te language-content">1M+ పౌరులు</span>
+          </h3>
+        </div>
+      </div>
+      
+      <a href="overall.html">
+  <button class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-12 py-5 rounded-full font-bold text-xl hover:from-yellow-500 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl pulse-glow">
+    <i class="fas fa-chart-bar mr-3 animate-pulse"></i>
+    <span class="lang-en">View Overall Status</span>
+    <span class="lang-hi language-content">समग्र स्थिति देखें</span>
+    <span class="lang-ta language-content">மொத்த நிலையைக் காண்க</span>
+    <span class="lang-te language-content">మొత్తం స్థితిని చూడండి</span>
+  </button>
+</a>
+
+    </div>
+  </section>
+
+  <!-- Three Status Cards with Live Counters and Enhanced Design -->
+  <section class="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"%23000000\" fill-opacity=\"0.1\"><path d=\"M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z\"/></g></svg>');"></div>
+    </div>
+
+    
+    <div class="relative max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Total Complaints Card -->
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-3xl blur-lg opacity-20 group-hover:opacity-30 transition duration-300"></div>
+          <div class="relative bg-gradient-to-br from-blue-50 to-blue-100 p-10 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-4 text-center border-l-8 border-blue-500 card-3d">
+            <!-- Realistic Icon -->
+            <div class="relative mb-6">
+              <div class="w-20 h-20 mx-auto bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-clipboard-list text-3xl text-white animate-pulse"></i>
+              </div>
+              <div class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center animate-bounce">
+                <i class="fas fa-plus text-white text-xs"></i>
+              </div>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">
+              <span class="lang-en">Total Complaints</span>
+              <span class="lang-hi language-content">कुल शिकायतें</span>
+              <span class="lang-ta language-content">மொத்த புகார்கள்</span>
+              <span class="lang-te language-content">మొత్తం ఫిర్యాదులు</span>
+            </h3>
+            <p class="text-5xl font-bold text-blue-700 mb-3 counter" data-target="12540">0</p>
+            <p class="text-gray-600 text-lg">
+              <span class="lang-en">Issues reported this year</span>
+              <span class="lang-hi language-content">इस साल रिपोर्ट की गई समस्याएं</span>
+              <span class="lang-ta language-content">இந்த ஆண்டு அறிக்கையிடப்பட்ட பிரச்சினைகள்</span>
+              <span class="lang-te language-content">ఈ సంవత్సరం నివేదించబడిన సమస్యలు</span>
+            </p>
+            <div class="mt-4 w-full bg-gray-200 rounded-full h-2">
+<div class="bg-blue-500 h-2 rounded-full animate-pulse" style="width: 85%"></div>
+            </div>
+          </div>
+    </div>
+
+    <!-- Pending Complaints Card -->
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-3xl blur-lg opacity-20 group-hover:opacity-30 transition duration-300"></div>
+          <div class="relative bg-gradient-to-br from-yellow-50 to-orange-100 p-10 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-4 text-center border-l-8 border-yellow-500 card-3d">
+            <!-- Realistic Icon -->
+            <div class="relative mb-6">
+              <div class="w-20 h-20 mx-auto bg-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-clock text-3xl text-white animate-spin"></i>
+              </div>
+              <div class="absolute -top-2 -right-2 w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center animate-pulse">
+                <i class="fas fa-hourglass-half text-white text-xs"></i>
+              </div>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">
+              <span class="lang-en">Pending</span>
+              <span class="lang-hi language-content">लंबित</span>
+              <span class="lang-ta language-content">நிலுவையில்</span>
+              <span class="lang-te language-content">పెండింగ్</span>
+            </h3>
+            <p class="text-5xl font-bold text-yellow-700 mb-3 counter" data-target="2670">0</p>
+            <p class="text-gray-600 text-lg">
+              <span class="lang-en">Under review</span>
+              <span class="lang-hi language-content">समीक्षा के तहत</span>
+              <span class="lang-ta language-content">மறுஆய்வில்</span>
+              <span class="lang-te language-content">సమీక్షలో</span>
+            </p>
+            <div class="mt-4 w-full bg-gray-200 rounded-full h-2">
+<div class="bg-yellow-500 h-2 rounded-full animate-pulse" style="width: 21%"></div>
+            </div>
+          </div>
+    </div>
+
+    <!-- Completed Complaints Card -->
+        <div class="group relative">
+          <div class="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-3xl blur-lg opacity-20 group-hover:opacity-30 transition duration-300"></div>
+          <div class="relative bg-gradient-to-br from-green-50 to-green-100 p-10 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-4 text-center border-l-8 border-green-500 card-3d">
+            <!-- Realistic Icon -->
+            <div class="relative mb-6">
+              <div class="w-20 h-20 mx-auto bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                <i class="fas fa-check-circle text-3xl text-white animate-bounce"></i>
+              </div>
+              <div class="absolute -top-2 -right-2 w-6 h-6 bg-green-600 rounded-full flex items-center justify-center animate-pulse">
+                <i class="fas fa-star text-white text-xs"></i>
+              </div>
+    </div>
+
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">
+              <span class="lang-en">Completed</span>
+              <span class="lang-hi language-content">पूर्ण</span>
+              <span class="lang-ta language-content">முடிந்தது</span>
+              <span class="lang-te language-content">పూర్తయింది</span>
+            </h3>
+            <p class="text-5xl font-bold text-green-700 mb-3 counter" data-target="9870">0</p>
+            <p class="text-gray-600 text-lg">
+              <span class="lang-en">Successfully resolved</span>
+              <span class="lang-hi language-content">सफलतापूर्वक हल</span>
+              <span class="lang-ta language-content">வெற்றிகரமாக தீர்வு</span>
+              <span class="lang-te language-content">విజయవంతంగా పరిష్కరించబడింది</span>
+            </p>
+            <div class="mt-4 w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full animate-pulse" style="width: 79%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+  <!-- Platform Features Section - Professional Government Style -->
+
+  </div> <!-- End of Static Background Section -->
+
+  <!-- How It Works Section - Professional Government Style -->
+  <section class="bg-white py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-blue-800 mb-4">
+          <span class="lang-en">How It Works</span>
+          <span class="lang-hi language-content">यह कैसे काम करता है</span>
+          <span class="lang-ta language-content">இது எவ்வாறு செயல்படுகிறது</span>
+          <span class="lang-te language-content">ఇది ఎలా పని చేస్తుంది</span>
+        </h2>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          <span class="lang-en">A streamlined process from complaint submission to resolution</span>
+          <span class="lang-hi language-content">शिकायत जमा करने से लेकर समाधान तक का सुव्यवस्थित प्रक्रिया</span>
+          <span class="lang-ta language-content">புகார் சமர்ப்பிப்பிலிருந்து தீர்வு வரை ஒரு திறமையான செயல்முறை</span>
+          <span class="lang-te language-content">ఫిర్యాదు సమర్పణ నుండి పరిష్కారం వరకు ఒక సమర్థవంతమైన ప్రక్రియ</span>
+        </p>
+      </div>
+      
+      <div class="flex flex-col md:flex-row justify-center items-center space-y-8 md:space-y-0 md:space-x-6">
+        <!-- Step 1: Citizen Reports -->
+        <div class="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-200 text-center max-w-xs">
+          <div class="w-12 h-12 mx-auto bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <i class="fas fa-user text-xl text-blue-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">
+            <span class="lang-en">Citizen Reports</span>
+            <span class="lang-hi language-content">नागरिक रिपोर्ट</span>
+            <span class="lang-ta language-content">குடிமகன் அறிக்கை</span>
+            <span class="lang-te language-content">పౌర నివేదిక</span>
+          </h3>
+          <p class="text-gray-600 text-sm">
+            <span class="lang-en">Submit complaint with photos</span>
+            <span class="lang-hi language-content">फोटो के साथ शिकायत जमा करें</span>
+            <span class="lang-ta language-content">புகைப்படங்களுடன் புகார் சமர்ப்பிக்கவும்</span>
+            <span class="lang-te language-content">ఫోటోలతో ఫిర్యాదు సమర్పించండి</span>
+          </p>
+        </div>
+        
+        <div class="hidden md:block text-2xl text-gray-400">→</div>
+        
+        <!-- Step 2: AI Verification -->
+        <div class="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-200 text-center max-w-xs">
+          <div class="w-12 h-12 mx-auto bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            <i class="fas fa-check-circle text-xl text-green-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">
+            <span class="lang-en">AI Verification</span>
+            <span class="lang-hi language-content">AI सत्यापन</span>
+            <span class="lang-ta language-content">AI சரிபார்ப்பு</span>
+            <span class="lang-te language-content">AI ధృవీకరణ</span>
+          </h3>
+          <p class="text-gray-600 text-sm">
+            <span class="lang-en">Smart validation & routing</span>
+            <span class="lang-hi language-content">स्मार्ट सत्यापन और रूटिंग</span>
+            <span class="lang-ta language-content">ஸ்மார்ட் சரிபார்ப்பு மற்றும் ரூட்டிங்</span>
+            <span class="lang-te language-content">స్మార్ట్ ధృవీకరణ మరియు రూటింగ్</span>
+          </p>
+        </div>
+        
+        <div class="hidden md:block text-2xl text-gray-400">→</div>
+        
+        <!-- Step 3: Department Action -->
+        <div class="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-200 text-center max-w-xs">
+          <div class="w-12 h-12 mx-auto bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <i class="fas fa-building text-xl text-purple-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">
+            <span class="lang-en">Department Action</span>
+            <span class="lang-hi language-content">विभागीय कार्य</span>
+            <span class="lang-ta language-content">துறை நடவடிக்கை</span>
+            <span class="lang-te language-content">శాఖ చర్య</span>
+          </h3>
+          <p class="text-gray-600 text-sm">
+            <span class="lang-en">Officials take action</span>
+            <span class="lang-hi language-content">अधिकारी कार्यवाही करते हैं</span>
+            <span class="lang-ta language-content">அதிகாரிகள் நடவடிக்கை எடுக்கிறார்கள்</span>
+            <span class="lang-te language-content">అధికారులు చర్య తీసుకుంటారు</span>
+          </p>
+        </div>
+        
+        <div class="hidden md:block text-2xl text-gray-400">→</div>
+        
+        <!-- Step 4: Resolution -->
+        <div class="bg-gray-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-200 text-center max-w-xs">
+          <div class="w-12 h-12 mx-auto bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+            <i class="fas fa-check-circle text-xl text-yellow-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">
+            <span class="lang-en">Resolution</span>
+            <span class="lang-hi language-content">समाधान</span>
+            <span class="lang-ta language-content">தீர்வு</span>
+            <span class="lang-te language-content">పరిష్కారం</span>
+          </h3>
+          <p class="text-gray-600 text-sm">
+            <span class="lang-en">Issue gets resolved</span>
+            <span class="lang-hi language-content">समस्या हल हो जाती है</span>
+            <span class="lang-ta language-content">பிரச்சினை தீர்க்கப்படுகிறது</span>
+            <span class="lang-te language-content">సమస్య పరిష్కరించబడుతుంది</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Contributors Section - Professional Government Style -->
+  <section class="bg-gray-50 py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-blue-800 mb-4">
+          <span class="lang-en">Top Contributors</span>
+          <span class="lang-hi language-content">शीर्ष योगदानकर्ता</span>
+          <span class="lang-ta language-content">முதன்மை பங்களிப்பாளர்கள்</span>
+          <span class="lang-te language-content">టాప్ కంట్రిబ్యూటర్స్</span>
+        </h2>
+        <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+          <span class="lang-en">Recognizing citizens who are making a difference in their communities</span>
+          <span class="lang-hi language-content">उन नागरिकों को पहचानना जो अपने समुदायों में बदलाव ला रहे हैं</span>
+          <span class="lang-ta language-content">தங்கள் சமூகங்களில் மாற்றத்தை ஏற்படுத்தும் குடிமக்களை அங்கீகரித்தல்</span>
+          <span class="lang-te language-content">వారి సమాజాలలో మార్పు తీసుకువస్తున్న పౌరులను గుర్తించడం</span>
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Contributor 1 -->
+        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 text-center">
+          <div class="w-12 h-12 mx-auto bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <i class="fas fa-user text-xl text-blue-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">John Doe</h3>
+          <p class="text-gray-600 mb-3">
+            <span class="lang-en">Connaught Place, Central</span>
+            <span class="lang-hi language-content">दिल्ली</span>
+            <span class="lang-ta language-content">டெல்லி</span>
+            <span class="lang-te language-content">ఢిల్లీ</span>
+          </p>
+          <p class="text-blue-600 font-bold text-xl">120
+            <span class="lang-en">Reports</span>
+            <span class="lang-hi language-content">रिपोर्ट</span>
+            <span class="lang-ta language-content">அறிக்கைகள்</span>
+            <span class="lang-te language-content">నివేదికలు</span>
+          </p>
+        </div>
+
+        <!-- Contributor 2 -->
+        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 text-center">
+          <div class="w-12 h-12 mx-auto bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            <i class="fas fa-user text-xl text-green-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Jane Smith</h3>
+          <p class="text-gray-600 mb-3">
+            <span class="lang-en">Civil Lines</span>
+            <span class="lang-hi language-content">मुंबई</span>
+            <span class="lang-ta language-content">மும்பை</span>
+            <span class="lang-te language-content">ముంబై</span>
+          </p>
+          <p class="text-green-600 font-bold text-xl">98 
+            <span class="lang-en">Reports</span>
+            <span class="lang-hi language-content">रिपोर्ट</span>
+            <span class="lang-ta language-content">அறிக்கைகள்</span>
+            <span class="lang-te language-content">నివేదికలు</span>
+          </p>
+        </div>
+
+        <!-- Contributor 3 -->
+        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 text-center">
+          <div class="w-12 h-12 mx-auto bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <i class="fas fa-user text-xl text-purple-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Ravi Kumar</h3>
+          <p class="text-gray-600 mb-3">
+            <span class="lang-en">Saket</span>
+            <span class="lang-hi language-content">बैंगलोर</span>
+            <span class="lang-ta language-content">பெங்களூர்</span>
+            <span class="lang-te language-content">బెంగళూరు</span>
+          </p>
+          <p class="text-purple-600 font-bold text-xl">85 
+            <span class="lang-en">Reports</span>
+            <span class="lang-hi language-content">रिपोर्ट</span>
+            <span class="lang-ta language-content">அறிக்கைகள்</span>
+            <span class="lang-te language-content">నివేదికలు</span>
+          </p>
+        </div>
+
+        <!-- Contributor 4 -->
+        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 text-center">
+          <div class="w-12 h-12 mx-auto bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+            <i class="fas fa-user text-xl text-yellow-600"></i>
+          </div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Anita Rao</h3>
+          <p class="text-gray-600 mb-3">
+            <span class="lang-en">Chennai</span>
+            <span class="lang-hi language-content">चेन्नई</span>
+            <span class="lang-ta language-content">சென்னை</span>
+            <span class="lang-te language-content">చెన్నై</span>
+          </p>
+          <p class="text-yellow-600 font-bold text-xl">72 
+            <span class="lang-en">Reports</span>
+            <span class="lang-hi language-content">रिपोर्ट</span>
+            <span class="lang-ta language-content">அறிக்கைகள்</span>
+            <span class="lang-te language-content">నివేదికలు</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+<style>
+  /* ensure all inline svgs behave consistently */
+  .icon-svg { display: block; width: 100%; height: 100%; }
+  /* small helper to nudge problematic icons (use class .nudge if needed) */
+  .icon-nudge { transform: translateY(2px); } /* adjust value if needed */
+</style>
+
+<section class="bg-white py-12">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-blue-800 mb-8 text-center">Supported By</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+
+      <!-- Example card (all cards use same structure) -->
+      <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 text-center">
+        <!-- Icon container: fixed size, center, allow svg overflow so nothing gets clipped -->
+        <div class="w-16 h-16 mx-auto bg-blue-100 rounded-lg flex items-center justify-center mb-3 overflow-visible">
+          <!-- SVG: use same viewBox & preserveAspectRatio; add icon-svg class -->
+          <svg class="icon-svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-width="1.5">
+            <!-- building icon -->
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V10l7-7 7 7v11" />
+          </svg>
+        </div>
+        <p class="text-sm font-semibold">Ministry of Urban Development</p>
+      </div>
+
+      <!-- Smart Cities -->
+      <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 text-center">
+        <div class="w-16 h-16 mx-auto bg-green-100 rounded-lg flex items-center justify-center mb-3 overflow-visible">
+          <svg class="icon-svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 20v-6m0 0l-2 2m2-2l2 2M4 20h16M4 10h16l-8-8-8 8z" />
+          </svg>
+        </div>
+        <p class="text-sm font-semibold">Smart Cities Mission</p>
+      </div>
+
+      <!-- Digital India (clock-like icon example) -->
+      <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 text-center">
+        <div class="w-16 h-16 mx-auto bg-purple-100 rounded-lg flex items-center justify-center mb-3 overflow-visible">
+          <!-- If this clock icon was misaligned, add .icon-nudge to tweak -->
+          <svg class="icon-svg icon-nudge" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-width="1.5">
+            <!-- sample clock path (use your real icon here) -->
+            <circle cx="12" cy="12" r="9" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v6l4 2" />
+          </svg>
+        </div>
+        <p class="text-sm font-semibold">Digital India</p>
+      </div>
+
+      <!-- Good Governance -->
+      <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 text-center">
+        <div class="w-16 h-16 mx-auto bg-yellow-100 rounded-lg flex items-center justify-center mb-3 overflow-visible">
+          <svg class="icon-svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m9-12H3" />
+          </svg>
+        </div>
+        <p class="text-sm font-semibold">Good Governance</p>
+      </div>
+
+      <!-- Citizen Engagement -->
+      <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 text-center">
+        <div class="w-16 h-16 mx-auto bg-red-100 rounded-lg flex items-center justify-center mb-3 overflow-visible">
+          <svg class="icon-svg" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5V8h-5v12zM2 20h5V4H2v16zm7 0h6V12H9v8z" />
+          </svg>
+        </div>
+        <p class="text-sm font-semibold">Citizen Engagement</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <div class="flex items-center space-x-3 mb-4">
+            <img src="pp2c.png" alt="CivicSense Logo" class="h-10 w-auto">
+            <span class="text-xl font-bold">PragatiPulse</span>
+          </div>
+          <p class="text-blue-100">Empowering citizens to build better communities through technology and transparency.</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4">Quick Links</h3>
+          <ul class="space-y-2 text-blue-100">
+            <li><a href="report.html" class="hover:text-yellow-300">Report Issue</a></li>
+            <li><a href="track.html" class="hover:text-yellow-300">Track Complaint</a></li>
+            <li><a href="officer-login.html" class="hover:text-yellow-300">Officer Login</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4">Support</h3>
+          <ul class="space-y-2 text-blue-100">
+            <li><a href="#" class="hover:text-yellow-300">Help Center</a></li>
+            <li><a href="#" class="hover:text-yellow-300">Contact Us</a></li>
+            <li><a href="#" class="hover:text-yellow-300">FAQ</a></li>
+            <li><a href="#" class="hover:text-yellow-300">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4">Connect With Us</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="text-2xl hover:text-yellow-300"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-2xl hover:text-yellow-300"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-2xl hover:text-yellow-300"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-2xl hover:text-yellow-300"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-blue-500 mt-8 pt-8 text-center text-blue-100">
+        <p>&copy; 2025 PragatiPulse - CivicSense Complaint Portal. All rights reserved.</p>
+        <p class="mt-2">Powered by Digital India Initiative</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript for Interactive Features -->
+  <script>
+    // Global variables for tracking animations
+    let currentLanguage = 'en';
+
+    // Language Switching Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const languageSelector = document.getElementById('languageSelector');
+      const languageElements = document.querySelectorAll('[class*="lang-"]');
+      
+      // Set default language
+      showLanguage('en');
+      
+      languageSelector.addEventListener('change', function() {
+        const selectedLanguage = this.value;
+        currentLanguage = selectedLanguage;
+        showLanguage(selectedLanguage);
+      });
+      
+      function showLanguage(lang) {
+        languageElements.forEach(element => {
+          if (element.classList.contains('lang-' + lang)) {
+            element.style.display = 'inline';
+            element.classList.add('active');
+          } else {
+            element.style.display = 'none';
+            element.classList.remove('active');
+          }
+        });
+      }
+    });
+
+    // Live Counter Animation (only once per page load)
+    function animateCounter(element, target, duration = 2000) {
+      let start = 0;
+      const increment = target / (duration / 16);
+      
+      function updateCounter() {
+        start += increment;
+        if (start < target) {
+          element.textContent = Math.floor(start).toLocaleString();
+          requestAnimationFrame(updateCounter);
+        } else {
+          element.textContent = target.toLocaleString();
+        }
+      }
+      
+      updateCounter();
+    }
+
+    // Intersection Observer for Scroll-triggered Animations
+    const observerOptions = {
+      threshold: 0.3,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Animate counters only once when they first come into view
+          const counters = entry.target.querySelectorAll('.counter');
+          counters.forEach(counter => {
+            if (!counter.classList.contains('animated')) {
+              const target = parseInt(counter.getAttribute('data-target'));
+              animateCounter(counter, target);
+              counter.classList.add('animated');
+            }
+          });
+          
+          // Add animation classes only once
+          if (!entry.target.classList.contains('animate-fade-in')) {
+            entry.target.classList.add('animate-fade-in');
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe all sections for scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+      const sections = document.querySelectorAll('section');
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
+
+    // GSAP Animations - Subtle and Professional
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Enhanced fade-in animation for cards
+    gsap.utils.toArray('.bg-white, .bg-gray-50, .bg-white\\/95').forEach(card => {
+      gsap.fromTo(card, 
+        { y: 30, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 80%",
+            end: "bottom 20%",
+            toggleActions: "play none none none"
+          }
+        }
+      );
+    });
+
+    // Parallax effect for background images
+    gsap.utils.toArray('.parallax-bg').forEach(bg => {
+      gsap.to(bg, {
+        yPercent: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: bg,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    });
+
+    // Add smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add loading animation
+    window.addEventListener('load', function() {
+      document.body.classList.add('loaded');
+    });
+  </script>
+
+  <!-- Additional CSS for animations -->
+  <style>
+    .animate-fade-in {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .loaded {
+      opacity: 1;
+    }
+    
+    body {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    
+    .counter {
+      font-variant-numeric: tabular-nums;
+    }
+    
+    /* Professional hover effects */
+    .bg-white:hover, .bg-gray-50:hover, .bg-white\/95:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Glass effect enhancement */
+    .bg-white\/95 {
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    /* Subtle gradient text */
+    .gradient-text {
+      background: linear-gradient(45deg, #1E40AF, #3B82F6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Custom 3-time rotation animation */
+    .hover\:rotate-3-times:hover {
+      animation: rotate3Times 1.5s ease-in-out;
+    }
+    
+    @keyframes rotate3Times {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(1080deg); } /* 3 full rotations = 3 * 360 = 1080 degrees */
+    }
+    
+    /* Glass effect enhancement */
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(45deg, #3B82F6, #8B5CF6);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(45deg, #2563EB, #7C3AED);
+    }
+  </style>
+
+</body>
+</html>

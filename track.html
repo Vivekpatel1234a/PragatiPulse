@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Report - CivicSense</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <nav class="bg-blue-700 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold tracking-wide">CivicSense</a>
+      <div class="space-x-6">
+        <a href="index.html" class="hover:text-gray-200">Home</a>
+        <a href="report.html" class="hover:text-gray-200">Report</a>
+        <a href="track.html" class="hover:text-gray-200 font-semibold">Track</a>
+        <a href="about.html" class="hover:text-gray-200">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Section -->
+  <main class="flex-grow relative py-16"
+        style="background: url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') no-repeat center center/cover;">
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+
+    <div class="relative max-w-4xl mx-auto px-6 z-10">
+      <h2 class="text-3xl font-bold text-white mb-6 text-center drop-shadow-lg">Track Your Reports</h2>
+
+      <div class="bg-white/80 p-6 rounded-xl shadow-lg border border-gray-200/30">
+
+        <!-- Clear Reports Button -->
+        <div class="flex justify-end mb-4">
+          <button id="clearReportsBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors duration-200">
+            <i class="fas fa-trash-alt mr-2"></i>Clear All Reports
+          </button>
+        </div>
+
+        <!-- Report Table -->
+        <div id="reportDetails">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="px-3 py-2 border">Problem Type</th>
+                <th class="px-3 py-2 border w-64">Location</th>
+                <th class="px-3 py-2 border">Submitted At</th>
+                <th class="px-3 py-2 border">Progress</th>
+              </tr>
+            </thead>
+            <tbody id="reportTableBody">
+              <!-- Filled dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-700 text-white py-6 mt-0 border-t-0">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-sm">© 2025 CivicSense. All rights reserved.</p>
+      <div class="space-x-4 mt-3 md:mt-0">
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const tableBody = document.getElementById('reportTableBody');
+    const clearBtn = document.getElementById('clearReportsBtn');
+    const stages = ["Sent", "Reached Authority", "Resolved", "Feedback"];
+    const stageColors = ["bg-blue-600", "bg-orange-500", "bg-green-500", "bg-purple-600"];
+
+    function displayReports() {
+      const reports = JSON.parse(localStorage.getItem('reports')) || [];
+
+      if(reports.length === 0){
+        tableBody.innerHTML = '<tr><td colspan="4" class="px-3 py-2 text-center text-gray-500">No reports submitted yet.</td></tr>';
+        return;
+      }
+
+      tableBody.innerHTML = '';
+
+      reports.forEach(report => {
+        const stage = report.stage || 1;
+        const progressPercent = (stage / stages.length) * 100;
+        const progressColor = stageColors[stage - 1];
+        const submittedAt = report.time || "N/A";
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="px-3 py-2 border">${report.type}</td>
+          <td class="px-3 py-2 border w-64">${report.location}</td>
+          <td class="px-3 py-2 border">${submittedAt}</td>
+          <td class="px-3 py-2 border">
+            <div class="relative w-full h-4 bg-gray-200 rounded-full overflow-hidden">
+              <div class="absolute top-0 left-0 h-full ${progressColor}" style="width: ${progressPercent}%"></div>
+            </div>
+            <div class="flex justify-between text-gray-700 font-semibold text-xs mt-1">
+              <span>Sent</span>
+              <span>Reached</span>
+              <span>Resolved</span>
+              <span>Feedback</span>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Clear All Reports
+    clearBtn.addEventListener('click', () => {
+      localStorage.removeItem('reports');
+      displayReports();
+    });
+
+    displayReports();
+  </script>
+</body>
+</html>

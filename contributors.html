@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Contributors - PragatiPulse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Header + Navbar -->
+  <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <img src="pp2c.png" alt="Logo" class="h-14 w-auto floating">
+        <span class="text-2xl font-bold">PragatiPulse</span>
+      </div>
+      <nav class="flex items-center space-x-8">
+        <a href="index.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">Home</a>
+        <a href="officer-login.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">Officer Login</a>
+        <a href="contributors.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">Top Contributors</a>
+        <a href="about.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Leaderboard Section -->
+  <section class="relative py-20 bg-fixed bg-center bg-cover" 
+    style="background-image: url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');">
+    
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-indigo-900/80"></div>
+
+    <div class="relative max-w-7xl mx-auto px-6 text-center text-white">
+      <h2 class="text-4xl md:text-5xl font-bold mb-12">🏆 Top Contributors</h2>
+
+      <!-- Top 3 Podium -->
+      <div class="flex justify-center items-end gap-6 mb-16">
+        <!-- 2nd Place -->
+        <div class="flex flex-col items-center">
+          <img class="w-24 h-24 rounded-full border-4 border-gray-400 mb-2" 
+               src="https://api.dicebear.com/9.x/bottts/svg?seed=dog" alt="Jane Smith">
+          <span class="text-lg font-semibold">Jane Smith</span>
+          <span class="text-sm text-gray-300">98 Issues</span>
+          <div class="bg-gray-400 w-16 h-24 mt-2"></div>
+          <span class="mt-2">2nd</span>
+        </div>
+
+        <!-- 1st Place -->
+        <div class="flex flex-col items-center">
+          <img class="w-28 h-28 rounded-full border-4 border-yellow-400 mb-2" 
+               src="https://api.dicebear.com/9.x/bottts/svg?seed=cat" alt="John Doe">
+          <span class="text-lg font-semibold">John Doe</span>
+          <span class="text-sm text-gray-300">120 Issues</span>
+          <div class="bg-yellow-400 w-20 h-32 mt-2"></div>
+          <span class="mt-2">1st</span>
+        </div>
+
+        <!-- 3rd Place -->
+        <div class="flex flex-col items-center">
+          <img class="w-24 h-24 rounded-full border-4 border-blue-400 mb-2" 
+               src="https://api.dicebear.com/9.x/bottts/svg?seed=fox" alt="Ravi Kumar">
+          <span class="text-lg font-semibold">Ravi Kumar</span>
+          <span class="text-sm text-gray-300">85 Issues</span>
+          <div class="bg-blue-400 w-16 h-20 mt-2"></div>
+          <span class="mt-2">3rd</span>
+        </div>
+      </div>
+
+      <!-- Leaderboard Filter Card -->
+      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 max-w-4xl mx-auto">
+        <h3 class="text-2xl font-bold mb-6 text-white">Registered Contributors</h3>
+
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+          <select class="p-3 rounded-lg text-black flex-1" id="stateFilter">
+            <option value="">Select State</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Maharashtra">Maharashtra</option>
+          </select>
+          <select class="p-3 rounded-lg text-black flex-1" id="districtFilter">
+            <option value="">Select District</option>
+          </select>
+          <select class="p-3 rounded-lg text-black flex-1" id="cityFilter">
+            <option value="">Select City</option>
+          </select>
+        </div>
+
+        <div id="leaderboardList" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto"></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Updated contributors with DiceBear 9.x avatars
+    const data = [
+      { name: "John Doe", state: "Delhi", district: "Central", city: "Connaught Place", issues: 120, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=cat" },
+      { name: "Jane Smith", state: "Delhi", district: "North", city: "Civil Lines", issues: 115, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=dog" },
+      { name: "Ravi Kumar", state: "Delhi", district: "South", city: "Saket", issues: 110, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=fox" },
+      { name: "Anita Rao", state: "Maharashtra", district: "Mumbai", city: "Andheri", issues: 105, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=bear" },
+      { name: "Vikram Das", state: "Maharashtra", district: "Pune", city: "Pune City", issues: 100, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=penguin" },
+      { name: "Amit Sharma", state: "Delhi", district: "West", city: "Rajouri Garden", issues: 95, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=tiger" },
+      { name: "Priya Singh", state: "Delhi", district: "East", city: "Lajpat Nagar", issues: 90, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=elephant" },
+      { name: "Ramesh Patel", state: "Maharashtra", district: "Nagpur", city: "Nagpur City", issues: 85, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=wolf" },
+      { name: "Sneha Joshi", state: "Maharashtra", district: "Thane", city: "Thane City", issues: 80, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=frog" },
+      { name: "Karan Verma", state: "Delhi", district: "North", city: "Civil Lines", issues: 75, avatar: "https://api.dicebear.com/9.x/bottts/svg?seed=panda" }
+    ];
+
+    const stateFilter = document.getElementById("stateFilter");
+    const districtFilter = document.getElementById("districtFilter");
+    const cityFilter = document.getElementById("cityFilter");
+    const leaderboardList = document.getElementById("leaderboardList");
+
+    const districts = { 
+      Delhi: ["Central","North","South","East","West"], 
+      Maharashtra: ["Mumbai","Pune","Nagpur","Thane","Nashik"] 
+    };
+    const cities = { 
+      Central:["Connaught Place"], North:["Civil Lines"], South:["Saket"], East:["Lajpat Nagar"], West:["Rajouri Garden"],
+      Mumbai:["Andheri"], Pune:["Pune City"], Nagpur:["Nagpur City"], Thane:["Thane City"], Nashik:["Nashik City"] 
+    };
+
+    function populateDistricts() {
+      districtFilter.innerHTML = '<option value="">Select District</option>';
+      cityFilter.innerHTML = '<option value="">Select City</option>';
+      const state = stateFilter.value;
+      if(state && districts[state]) districts[state].forEach(d => districtFilter.innerHTML += `<option value="${d}">${d}</option>`);
+      filterLeaderboard();
+    }
+
+    function populateCities() {
+      cityFilter.innerHTML = '<option value="">Select City</option>';
+      const district = districtFilter.value;
+      if(district && cities[district]) cities[district].forEach(c => cityFilter.innerHTML += `<option value="${c}">${c}</option>`);
+      filterLeaderboard();
+    }
+
+    function filterLeaderboard() {
+      const state = stateFilter.value;
+      const district = districtFilter.value;
+      const city = cityFilter.value;
+
+      let filtered = data.filter(item => 
+        (!state || item.state === state) &&
+        (!district || item.district === district) &&
+        (!city || item.city === city)
+      );
+
+      leaderboardList.innerHTML = filtered.map(item => `
+        <div class="bg-white/20 p-4 rounded-lg border border-white/30 flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <img class="w-10 h-10 rounded-full" src="${item.avatar}" alt="${item.name}">
+            <div>
+              <span class="font-bold">${item.name}</span>
+              <p class="text-sm">${item.city}, ${item.district}</p>
+            </div>
+          </div>
+          <span class="font-semibold">${item.issues} Issues</span>
+        </div>
+      `).join('');
+    }
+
+    stateFilter.addEventListener("change", populateDistricts);
+    districtFilter.addEventListener("change", populateCities);
+    cityFilter.addEventListener("change", filterLeaderboard);
+
+    // Initial load
+    filterLeaderboard();
+    
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CivicSense Officer Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+.card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.card:hover { transform: scale(1.02); box-shadow: 0 10px 20px rgba(0, 255, 255, 0.3);}
+.glow-border { border:1px solid rgba(0,255,255,0.2); box-shadow:0 0 10px rgba(0,255,255,0.2);}
+.chart-container { height:300px; width:100%; position: relative; }
+body { overflow-x:hidden; }
+</style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col min-h-screen">
+
+<!-- Navbar -->
+<header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-xl">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="text-2xl font-bold tracking-wide">PragatiPulse</a>
+    <div class="space-x-6">
+      <a href="index.html" class="hover:text-yellow-300">Home</a>
+      <a href="report.html" class="hover:text-yellow-300">Report</a>
+      <a href="track.html" class="hover:text-yellow-300">Track</a>
+      <a href="officer.html" class="hover:text-yellow-300 font-semibold">Officer</a>
+      <a href="about.html" class="hover:text-yellow-300">About</a>
+    </div>
+  </div>
+</header>
+
+<div class="container mx-auto max-w-6xl flex-1 p-4">
+<h1 class="text-3xl font-bold text-center text-cyan-400 mb-6">🛠 Officer Dashboard</h1>
+
+<!-- Date Picker -->
+<div class="flex justify-center gap-4 mb-6">
+<input id="datePicker" class="p-2 rounded bg-gray-100 text-black w-48 text-center" placeholder="Select date" />
+</div>
+
+<!-- Top Charts -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+<div class="card glow-border bg-gray-800 p-4 rounded-xl chart-container">
+<h2 class="text-center font-semibold mb-2">📌 Daily Complaints</h2>
+<canvas id="dailyDonutChart"></canvas>
+</div>
+<div class="card glow-border bg-gray-800 p-4  rounded-xl chart-container">
+<h2 class="text-center font-semibold mb-2">✅ Completed Complaints Today</h2>
+<canvas id="completedTodayChart"></canvas>
+</div>
+<div class="card glow-border bg-gray-800 p-4 rounded-xl chart-container">
+<h2 class="text-center font-semibold mb-2">📅 Monthly Completed Complaints</h2>
+<canvas id="monthlyCompletedChart"></canvas>
+</div>
+</div>
+
+<!-- Weekly Pending -->
+<div class="card glow-border bg-gray-800 p-4 rounded-xl mb-6 chart-container">
+<h2 class="text-center font-semibold mb-2">🗓 Weekly Pending Complaints Assigned</h2>
+<canvas id="weeklyPendingChart"></canvas>
+</div>
+
+<!-- Assigned Complaints Cards -->
+<h2 class="text-cyan-400 text-xl font-bold mb-4">Assigned Complaints</h2>
+<div id="complaintsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+<div class="flex justify-center mt-4">
+<button id="showMoreBtn" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition">Show More</button>
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-blue-900 text-white mt-auto">
+  <div class="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- About -->
+    <div>
+      <h3 class="text-xl font-bold mb-4">PragatiPulse</h3>
+      <p class="text-gray-300">A civic reporting platform helping citizens and government collaborate for a cleaner and safer city.</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div>
+      <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+      <ul class="space-y-2">
+        <li><a href="index.html" class="hover:text-yellow-400">Home</a></li>
+        <li><a href="report.html" class="hover:text-yellow-400">Report</a></li>
+        <li><a href="track.html" class="hover:text-yellow-400">Track</a></li>
+        <li><a href="officer.html" class="hover:text-yellow-400">Officer</a></li>
+        <li><a href="about.html" class="hover:text-yellow-400">About</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div>
+      <h3 class="text-xl font-bold mb-4">Contact</h3>
+      <p class="text-gray-300"><i class="fas fa-envelope mr-2"></i>info@PragatiPulse.gov</p>
+      <p class="text-gray-300"><i class="fas fa-phone mr-2"></i>+91 12345 67890</p>
+    </div>
+  </div>
+
+  <div class="border-t border-blue-700 mt-6 text-center py-4 text-gray-400 text-sm">
+    &copy; 2025 PragatiPulse. All rights reserved.
+  </div>
+</footer>
+
+<script>
+// Complaint types
+const complaintTypes = ['Pothole','Water','Streetlight','Garbage','Other'];
+let visibleCount = 5;
+
+// Assigned complaints
+let assignedComplaints = [
+{id:1,type:'Pothole',city:'City A',status:'Pending'},
+{id:2,type:'Water',city:'City B',status:'Pending'},
+{id:3,type:'Streetlight',city:'City C',status:'Pending'},
+{id:4,type:'Garbage',city:'City D',status:'Pending'},
+{id:5,type:'Pothole',city:'City E',status:'Pending'},
+{id:6,type:'Water',city:'City F',status:'Pending'},
+{id:7,type:'Pothole',city:'City G',status:'Pending'},
+{id:8,type:'Garbage',city:'City H',status:'Pending'},
+{id:9,type:'Streetlight',city:'City I',status:'Pending'},
+{id:10,type:'Other',city:'City J',status:'Pending'}
+];
+
+// Randomize chart data based on date
+function generateData() {
+    const dailyProblems = complaintTypes.map(()=>Math.floor(Math.random()*5)+1);
+    const completedToday = Array.from({length:7},()=>Math.floor(Math.random()*5));
+    const monthlyCompleted = Array.from({length:12},()=>Math.floor(Math.random()*15));
+    const weeklyPending = Array.from({length:7},()=>Math.floor(Math.random()*10)+1);
+    return {dailyProblems,completedToday,monthlyCompleted,weeklyPending};
+}
+
+let charts = {};
+function renderCharts(){
+    const {dailyProblems,completedToday,monthlyCompleted,weeklyPending} = generateData();
+
+    // Daily Donut Chart
+    if(charts.dailyDonut) charts.dailyDonut.destroy();
+    charts.dailyDonut = new Chart(document.getElementById('dailyDonutChart'),{
+        type:'doughnut',
+        data:{
+            labels:complaintTypes,
+            datasets:[{
+                data:dailyProblems,
+                backgroundColor:['#F87171','#FBBF24','#34D399','#60A5FA','#A78BFA']
+            }]
+        },
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            cutout: '50%',
+            radius: '70%',
+            plugins:{legend: { position: 'bottom' }}
+        }
+    });
+
+    // Completed Today Bar Chart
+    if(charts.completedToday) charts.completedToday.destroy();
+    charts.completedToday = new Chart(document.getElementById('completedTodayChart'),{
+        type:'bar',
+        data:{
+            labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+            datasets:[{label:'Completed Today',data:completedToday,backgroundColor:'#10B981'}]
+        },
+        options:{responsive:true,maintainAspectRatio:false}
+    });
+
+    // Monthly Completed Line Chart
+    if(charts.monthlyCompleted) charts.monthlyCompleted.destroy();
+    charts.monthlyCompleted = new Chart(document.getElementById('monthlyCompletedChart'),{
+        type:'line',
+        data:{
+            labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+            datasets:[{
+                label:'Monthly Completed',
+                data:monthlyCompleted,
+                borderColor:'#FBBF24',
+                backgroundColor:'rgba(251,191,36,0.3)',
+                fill:true
+            }]
+        },
+        options:{responsive:true,maintainAspectRatio:false}
+    });
+
+    // Weekly Pending Bar Chart
+    if(charts.weeklyPending) charts.weeklyPending.destroy();
+    charts.weeklyPending = new Chart(document.getElementById('weeklyPendingChart'),{
+        type:'bar',
+        data:{
+            labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+            datasets:[{label:'Weekly Pending',data:weeklyPending,backgroundColor:'#EF4444'}]
+        },
+        options:{responsive:true,maintainAspectRatio:false}
+    });
+}
+
+// Render assigned complaints
+function renderComplaints(){
+    const container = document.getElementById('complaintsContainer');
+    container.innerHTML = '';
+    assignedComplaints.slice(0,visibleCount).forEach(c=>{
+        let div = document.createElement('div');
+        div.className = 'card glow-border bg-gray-800 p-4 rounded-xl';
+        div.innerHTML = `
+        <h3 class="font-semibold mb-1">${c.type}</h3>
+        <p class="text-sm mb-1">City: ${c.city}</p>
+        <p class="text-sm mb-2">Status: <span id="status-${c.id}">${c.status}</span></p>
+        <button id="btn-${c.id}" ${c.status==='Completed'?'disabled class="bg-gray-500 px-3 py-1 rounded"':'class="bg-green-600 px-3 py-1 rounded hover:bg-green-700 transition"'} onclick="markComplete(${c.id})">Mark Complete</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// Mark complaint complete
+function markComplete(id){
+    const comp = assignedComplaints.find(c=>c.id===id);
+    if(comp && comp.status==='Pending'){
+        comp.status='Completed';
+        document.getElementById('status-'+id).innerText='Completed';
+        const btn = document.getElementById('btn-'+id);
+        btn.disabled=true;
+        btn.className='bg-gray-500 px-3 py-1 rounded';
+    }
+}
+
+// Show more button
+document.getElementById('showMoreBtn').addEventListener('click',()=>{
+    visibleCount = assignedComplaints.length;
+    renderComplaints();
+});
+
+flatpickr("#datePicker",{defaultDate:new Date(),dateFormat:"Y-m-d",onChange:()=>renderCharts()});
+
+renderCharts();
+renderComplaints();
+</script>
+
+</body>
+</html>

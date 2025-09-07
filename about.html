@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - PragatiPulse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Card hover effect */
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRp4fnLrFH3TuTgzFQ08ch6_g4srUVPQzihg&s');
+  background-size: 200% 100%;
+  background-position: left center;  /* for left half */
+  z-index: 0;
+  transition: all 0.5s ease;
+}
+
+.card::after {
+  right: -50%;
+  left: auto;
+  background-position: right center; /* for right half */
+}
+
+.card::before {
+  left: -50%;
+  background-position: left center;
+}
+
+.card:hover::before {
+  left: 0;
+}
+
+.card:hover::after {
+  right: 0;
+}
+
+.card-content {
+  position: relative;
+  z-index: 10;
+}
+
+.card:hover {
+  transform: scale(1);
+}
+
+  </style>
+</head>
+<body class="bg-gray-100" 
+      style="background-image: url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80'); 
+             background-size: cover; 
+             background-attachment: fixed; 
+             backdrop-filter: blur(5px); 
+             -webkit-backdrop-filter: blur(5px);">
+
+  <!-- Header + Navbar -->
+  <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white shadow-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <img src="pp2c.png" alt="Logo" class="h-14 w-auto floating">
+        <span class="text-2xl font-bold">PragatiPulse</span>
+      </div>
+      <nav class="flex items-center space-x-8">
+        <a href="index.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">Home</a>
+        <a href="officer-login.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">Officer Login</a>
+        <a href="contributors.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">Top Contributors</a>
+        <a href="about.html" class="hover:text-yellow-300 transition-all duration-300 font-medium text-lg hover:scale-110">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- About Section -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-6 text-center mb-12">
+      <h1 class="text-4xl font-bold text-white">About PragatiPulse</h1>
+      <p class="text-lg text-gray-200 mt-4">Creating a transparent, efficient, and citizen-friendly civic engagement platform.</p>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      <!-- Mission Card -->
+      <div class="card bg-blue-700/80 rounded-2xl shadow-lg h-64 flex flex-col justify-center items-center p-6 text-white">
+        <div class="card-content">
+          <h2 class="text-xl font-bold mb-2" style="text-align: center; font-size:27px;">Our Mission</h2>
+          <p class="text-sm text-center" style="font-size: 17px;">Empower citizens to report civic issues and improve community services efficiently.</p>
+        </div>
+      </div>
+
+      <!-- Vision Card -->
+      <div class="card bg-indigo-700/80 rounded-2xl shadow-lg h-64 flex flex-col justify-center items-center p-6 text-white">
+        <div class="card-content">
+          <h2 class="text-xl font-bold mb-2" style="text-align: center;font-size:27px;">Our Vision</h2>
+          <p class="text-sm text-center" style="font-size: 17px;">A digitally connected society where citizens and government officers collaborate seamlessly.</p>
+        </div>
+      </div>
+
+      <!-- How It Works Card -->
+      <div class="card bg-green-700/80 rounded-2xl shadow-lg h-64 flex flex-col justify-center items-center p-6 text-white">
+        <div class="card-content">
+          <h2 class="text-xl font-bold mb-2" style="text-align: center;font-size:27px;">How It Works</h2>
+          <p class="text-sm text-center"style="font-size: 17px;">Report issues, track them in real-time, and see actions taken by government officers.</p>
+        </div>
+      </div>
+
+      <!-- Key Features Card -->
+      <div class="card bg-yellow-700/80 rounded-2xl shadow-lg h-64 flex flex-col justify-center items-center p-6 text-white">
+        <div class="card-content">
+          <h2 class="text-xl font-bold mb-2" style="text-align: center;font-size:27px;">Key Features</h2>
+          <p class="text-sm text-center"style="font-size: 17px;">Centralized reporting, real-time updates, contributor recognition, and secure data handling.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-800 text-white py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      &copy; 2025 PragatiPulse. All Rights Reserved.
+    </div>
+  </footer>
+
+</body>
+</html>

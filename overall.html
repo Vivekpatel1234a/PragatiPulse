@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overall Status - CivicSense</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <nav class="bg-blue-700 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-2xl font-bold tracking-wide">CivicSense</a>
+      <div class="space-x-6">
+        <a href="index.html" class="hover:text-gray-200">Home</a>
+        <a href="report.html" class="hover:text-gray-200">Report</a>
+        <a href="track.html" class="hover:text-gray-200">Track</a>
+        <a href="overall.html" class="hover:text-gray-200 font-semibold">Overall Status</a>
+        <a href="about.html" class="hover:text-gray-200">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Section -->
+  <main class="flex-grow relative py-16 bg-gray-50">
+    <div class="relative max-w-7xl mx-auto px-6 z-10">
+
+      <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Overall Complaint Status</h2>
+
+      <!-- Filters -->
+      <div class="flex flex-wrap gap-4 mb-6 justify-center">
+        <select id="stateFilter" class="border p-2 rounded">
+          <option value="">All States</option>
+        </select>
+        <select id="districtFilter" class="border p-2 rounded">
+          <option value="">All Districts</option>
+        </select>
+        <select id="cityFilter" class="border p-2 rounded">
+          <option value="">All Cities</option>
+        </select>
+        <button id="clearFilter" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Clear Filter</button>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse border border-gray-300">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="px-3 py-2 border">State</th>
+              <th class="px-3 py-2 border">District</th>
+              <th class="px-3 py-2 border">City</th>
+              <th class="px-3 py-2 border">Pending</th>
+              <th class="px-3 py-2 border">Completed</th>
+              <th class="px-3 py-2 border">Total</th>
+            </tr>
+          </thead>
+          <tbody id="complaintsTableBody">
+            <!-- Rows populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-700 text-white py-6 mt-0 border-t-0">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-sm">© 2025 CivicSense. All rights reserved.</p>
+      <div class="space-x-4 mt-3 md:mt-0">
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sample data: 10 states, 5 districts each, 5 cities each
+    const data = {
+      "Uttar Pradesh": {
+        "Ghaziabad": { "Muradnagar": {pending:5, completed:10}, "Modinagar": {pending:2, completed:8}, "Meerut": {pending:3, completed:7}, "Noida": {pending:1, completed:9}, "Greater Noida": {pending:4, completed:6} },
+        "Lucknow": { "Alambagh": {pending:3, completed:7}, "Gomti Nagar": {pending:2, completed:8}, "Aishbagh": {pending:1, completed:9}, "Indira Nagar": {pending:4, completed:6}, "Charbagh": {pending:2, completed:8} },
+        "Kanpur": { "Kalyanpur": {pending:3, completed:7}, "Ganga Nagar": {pending:4, completed:6}, "Rawatpur": {pending:2, completed:8}, "Swaroop Nagar": {pending:1, completed:9}, "Kidwai Nagar": {pending:5, completed:5} },
+        "Varanasi": { "Godowlia": {pending:3, completed:7}, "Sigra": {pending:2, completed:8}, "Bhelupur": {pending:4, completed:6}, "Lanka": {pending:1, completed:9}, "Gomti": {pending:5, completed:5} },
+        "Agra": { "Fatehabad": {pending:3, completed:7}, "Khandari": {pending:2, completed:8}, "Jaganpur": {pending:1, completed:9}, "Bharatpur": {pending:4, completed:6}, "Sadar": {pending:5, completed:5} }
+      },
+      "Maharashtra": {
+        "Mumbai": { "Andheri": {pending:2, completed:8}, "Borivali": {pending:1, completed:9}, "Dadar": {pending:3, completed:7}, "Chembur": {pending:4, completed:6}, "Bandra": {pending:2, completed:8} },
+        "Pune": { "Hinjewadi": {pending:3, completed:7}, "Kothrud": {pending:2, completed:8}, "Shivajinagar": {pending:1, completed:9}, "Aundh": {pending:4, completed:6}, "Hadapsar": {pending:2, completed:8} },
+        "Nagpur": { "Mihan": {pending:3, completed:7}, "Sitabuldi": {pending:2, completed:8}, "Reshimbagh": {pending:1, completed:9}, "Sadar": {pending:4, completed:6}, "Dhantoli": {pending:2, completed:8} },
+        "Nashik": { "Mahamrshi": {pending:3, completed:7}, "Satpur": {pending:2, completed:8}, "Gangapur": {pending:1, completed:9}, "Old Nashik": {pending:4, completed:6}, "New Nashik": {pending:2, completed:8} },
+        "Aurangabad": { "CIDCO": {pending:3, completed:7}, "Camp": {pending:2, completed:8}, "Kanchanwadi": {pending:1, completed:9}, "Garkheda": {pending:4, completed:6}, "Shendra": {pending:2, completed:8} }
+      },
+      "Karnataka": {
+        "Bengaluru": { "Whitefield": {pending:3, completed:7}, "Indiranagar": {pending:2, completed:8}, "MG Road": {pending:1, completed:9}, "Jayanagar": {pending:4, completed:6}, "Koramangala": {pending:2, completed:8} },
+        "Mysuru": { "Vidyaranyapuram": {pending:3, completed:7}, "Vishweshwaranagar": {pending:2, completed:8}, "Chamundi Hill": {pending:1, completed:9}, "Gokulam": {pending:4, completed:6}, "Jayalakshmipuram": {pending:2, completed:8} },
+        "Mangalore": { "Bolar": {pending:3, completed:7}, "Kadri": {pending:2, completed:8}, "Kankanady": {pending:1, completed:9}, "Bejai": {pending:4, completed:6}, "Pilikula": {pending:2, completed:8} },
+        "Hubli": { "Indira Nagar": {pending:3, completed:7}, "Gokul Road": {pending:2, completed:8}, "Shanti Nagar": {pending:1, completed:9}, "Rajwada": {pending:4, completed:6}, "Navanagar": {pending:2, completed:8} },
+        "Belgaum": { "Sadar": {pending:3, completed:7}, "Kuvempu Nagar": {pending:2, completed:8}, "RPD": {pending:1, completed:9}, "Shahapur": {pending:4, completed:6}, "Cottonpet": {pending:2, completed:8} }
+      },
+      // Add 7 more states with same 5x5 structure...
+      "Tamil Nadu": {},
+      "Gujarat": {},
+      "Rajasthan": {},
+      "West Bengal": {},
+      "Haryana": {},
+      "Bihar": {},
+      "Odisha": {}
+    };
+
+    const tableBody = document.getElementById('complaintsTableBody');
+    const stateFilter = document.getElementById('stateFilter');
+    const districtFilter = document.getElementById('districtFilter');
+    const cityFilter = document.getElementById('cityFilter');
+    const clearFilter = document.getElementById('clearFilter');
+
+    // Populate state filter
+    for (const state in data) {
+      const opt = document.createElement('option');
+      opt.value = state;
+      opt.textContent = state;
+      stateFilter.appendChild(opt);
+    }
+
+    function populateDistricts() {
+      const state = stateFilter.value;
+      districtFilter.innerHTML = '<option value="">All Districts</option>';
+      cityFilter.innerHTML = '<option value="">All Cities</option>';
+      if (state && data[state]) {
+        for (const district in data[state]) {
+          const opt = document.createElement('option');
+          opt.value = district;
+          opt.textContent = district;
+          districtFilter.appendChild(opt);
+        }
+      }
+      displayTable();
+    }
+
+    function populateCities() {
+      const state = stateFilter.value;
+      const district = districtFilter.value;
+      cityFilter.innerHTML = '<option value="">All Cities</option>';
+      if (state && district && data[state][district]) {
+        for (const city in data[state][district]) {
+          const opt = document.createElement('option');
+          opt.value = city;
+          opt.textContent = city;
+          cityFilter.appendChild(opt);
+        }
+      }
+      displayTable();
+    }
+
+    function displayTable() {
+      tableBody.innerHTML = '';
+      const stateVal = stateFilter.value;
+      const districtVal = districtFilter.value;
+      const cityVal = cityFilter.value;
+
+      for (const state in data) {
+        if (stateVal && state !== stateVal) continue;
+        for (const district in data[state]) {
+          if (districtVal && district !== districtVal) continue;
+          for (const city in data[state][district]) {
+            if (cityVal && city !== cityVal) continue;
+            const { pending, completed } = data[state][district][city];
+            const total = pending + completed;
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td class="px-3 py-2 border">${state}</td>
+              <td class="px-3 py-2 border">${district}</td>
+              <td class="px-3 py-2 border">${city}</td>
+              <td class="px-3 py-2 border">${pending}</td>
+              <td class="px-3 py-2 border">${completed}</td>
+              <td class="px-3 py-2 border">${total}</td>
+            `;
+            tableBody.appendChild(row);
+          }
+        }
+      }
+    }
+
+    stateFilter.addEventListener('change', populateDistricts);
+    districtFilter.addEventListener('change', populateCities);
+    cityFilter.addEventListener('change', displayTable);
+    clearFilter.addEventListener('click', () => {
+      stateFilter.value = '';
+      districtFilter.innerHTML = '<option value="">All Districts</option>';
+      cityFilter.innerHTML = '<option value="">All Cities</option>';
+      displayTable();
+    });
+
+    // Initial display
+    displayTable();
+  </script>
+</body>
+</html>
