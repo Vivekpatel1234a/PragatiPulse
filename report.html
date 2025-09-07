@@ -6,6 +6,13 @@
   <title>Report Civic Issue</title>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Add EmailJS SDK in head -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  emailjs.init("dpVgK5PVSKB1uV2cW"); // Your Public Key
+</script>
+
+
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
 
@@ -216,38 +223,54 @@
       stopBtn.classList.add("hidden");
     });
 
-    submitBtn.addEventListener('click', () => {
-      if (!photoTaken) return;
-      const comment = document.getElementById("comment").value.trim();
-      if (!comment) {
-        confirmationCard.textContent = "⚠️ Please describe your problem before submitting.";
-        confirmationCard.classList.remove("hidden");
-        return;
-      }
+   submitBtn.addEventListener('click', () => {
+  if (!photoTaken) return;
 
-      // Store report in localStorage array for multiple reports
-      const reportData = {
-        type: problemTypeSelect.value,
-        comment: comment,
-        location: locationText.textContent,
-        time: new Date().toLocaleString(),
-        audioUrl: audioPlayback.src || null,
-        stage: 1 // initial stage
-      };
+  const comment = document.getElementById("comment").value.trim();
+  if (!comment) {
+    confirmationCard.textContent = "⚠️ Please describe your problem before submitting.";
+    confirmationCard.classList.remove("hidden");
+    return;
+  }
 
-      let reports = JSON.parse(localStorage.getItem('reports')) || [];
-      reports.push(reportData);
-      localStorage.setItem('reports', JSON.stringify(reports));
+  // Report data (keys must match template variables in EmailJS)
+  const reportData = {
+    type: problemTypeSelect.value,
+    comment: comment,
+    location: locationText.textContent || "Not Available",
+    time: new Date().toLocaleString()
+  };
 
-      cameraSection.classList.add('hidden');
-      commentAudioSection.classList.add('hidden');
-      submitSection.classList.add('hidden');
-      locationSection.classList.add('hidden');
+  // Store in localStorage
+  let reports = JSON.parse(localStorage.getItem('reports')) || [];
+  reports.push(reportData);
+  localStorage.setItem('reports', JSON.stringify(reports));
 
-      confirmationCard.textContent = "✅ Report submitted! After system verification, you will be updated about your report.";
+  // Send Email
+ emailjs.send("service_a4y82kl", "template_ujq8rfd", reportData, "dpVgK5PVSKB1uV2cW")
+
+    .then((response) => {
+      console.log("SUCCESS!", response.status, response.text);
+      confirmationCard.textContent =confirmationCard.textContent = "✅ Report submitted! Your photo and details are under system verification. You will be notified once the review is complete.";
+
       confirmationCard.classList.remove('hidden');
-      reportSubmitted = true;
+    })
+    .catch((error) => {
+      console.error("FAILED...", error);
+      confirmationCard.textContent = "❌ Failed to send email. Please try again.";
+      confirmationCard.classList.remove('hidden');
     });
+
+  // Hide form after submit
+  cameraSection.classList.add('hidden');
+  commentAudioSection.classList.add('hidden');
+  submitSection.classList.add('hidden');
+  locationSection.classList.add('hidden');
+  reportSubmitted = true;
+});
+
+
+
 
     function resetForm() {
       photoTaken = false;
